@@ -1,46 +1,39 @@
-package cesco.nsmod.entity.custom;
+package cesco.nsmod.entity;
 
-import net.minecraft.entity.decoration.InteractionEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class CucciaInteractionEntity extends InteractionEntity {
+public class CucciaInteractionEntity extends Entity {
     private BlockPos ownerPos;
 
-    public CucciaInteractionEntity(EntityType<? extends InteractionEntity> entityType, World world) {
+    public CucciaInteractionEntity(EntityType<? extends CucciaInteractionEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    public void tick() {
+        // Aggiungi la logica del tick, se necessario
+    }
+
+    public BlockPos getOwnerPos() {
+        return this.ownerPos;
     }
 
     public void setOwnerPos(BlockPos pos) {
         this.ownerPos = pos;
     }
 
-    public BlockPos getOwnerPos() {
-        return ownerPos;
-    }
-
-    public static @Nullable CucciaInteractionEntity find(ServerWorld world, BlockPos pos) {
-        List<CucciaInteractionEntity> list = world.getEntitiesByClass(
-                CucciaInteractionEntity.class,
-                new net.minecraft.util.math.Box(pos).expand(1),
-                e -> pos.equals(e.getOwnerPos())
-        );
-        return list.isEmpty() ? null : list.get(0);
-    }
-
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (this.getWorld().isClient) return ActionResult.SUCCESS;
-        player.sendMessage(Text.literal("Hai cliccato sulla cuccia!"), false);
-        return ActionResult.SUCCESS;
+    protected void initDataTracker() {
+        // Inizializza il tracker dei dati se necessario
+    }
+
+    public static CucciaInteractionEntity create(ServerWorld world, BlockPos pos) {
+        // Esegui l'inizializzazione per la creazione dell'entità
+        return new CucciaInteractionEntity(EntityType.create("cuccia_interaction", CucciaInteractionEntity::new), world);
     }
 }
